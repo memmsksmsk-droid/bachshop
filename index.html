@@ -268,89 +268,115 @@ font-weight:bold;
 </audio>
 
 <script>
-/* Rain */
-for(let i=0;i<120;i++){
-let d=document.createElement("div");
-d.className="drop";
-d.style.left=Math.random()*100+"%";
-d.style.animationDuration=(0.6+Math.random())+"s";
-document.getElementById("rain").appendChild(d);
+/* 1. HIỆU ỨNG MƯA (RAIN EFFECT) */
+const rainContainer = document.getElementById("rain");
+for(let i = 0; i < 120; i++) {
+    let drop = document.createElement("div");
+    drop.className = "drop";
+    drop.style.left = Math.random() * 100 + "%";
+    drop.style.animationDuration = (0.6 + Math.random()) + "s";
+    rainContainer.appendChild(drop);
 }
 
-/* Music */
-let music=document.getElementById("bgMusic");
-let btn=document.getElementById("musicBtn");
-let playing=false;
+/* 2. ĐIỀU KHIỂN NHẠC (MUSIC CONTROL) */
+let music = document.getElementById("bgMusic");
+let btn = document.getElementById("musicBtn");
+let playing = false;
 
-function toggleMusic(){
-if(!playing){
-music.play();
-btn.innerHTML="🔊";
-btn.classList.add("playing");
-playing=true;
-}else{
-music.pause();
-btn.innerHTML="🎵";
-btn.classList.remove("playing");
-playing=false;
-}
-}
-
-/* Switch */
-function showRegister(){
-loginForm.classList.add("hidden");
-registerForm.classList.remove("hidden");
-title.innerText="ĐĂNG KÝ";
-msg.innerText="";
-}
-function showLogin(){
-registerForm.classList.add("hidden");
-loginForm.classList.remove("hidden");
-title.innerText="ĐĂNG NHẬP";
-msg.innerText="";
+function toggleMusic() {
+    if(!playing) {
+        music.play();
+        btn.innerHTML = "🔊";
+        btn.classList.add("playing");
+        playing = true;
+    } else {
+        music.pause();
+        btn.innerHTML = "🎵";
+        btn.classList.remove("playing");
+        playing = false;
+    }
 }
 
-/* Register */
-function register(){
-let email=regEmail.value.trim();
-let pass=regPass.value.trim();
-let users=JSON.parse(localStorage.getItem("users"))||[];
-
-if(email===""||pass===""){
-msg.style.color="red";
-msg.innerText="Vui lòng nhập đầy đủ!";
-return;
+/* 3. CHUYỂN ĐỔI FORM (SWITCH FORM) */
+function showRegister() {
+    document.getElementById("loginForm").classList.add("hidden");
+    document.getElementById("registerForm").classList.remove("hidden");
+    document.getElementById("title").innerText = "ĐĂNG KÝ";
+    document.getElementById("msg").innerText = "";
 }
 
-if(users.find(u=>u.email===email)){
-msg.style.color="red";
-msg.innerText="Email đã tồn tại!";
-return;
+function showLogin() {
+    document.getElementById("registerForm").classList.add("hidden");
+    document.getElementById("loginForm").classList.remove("hidden");
+    document.getElementById("title").innerText = "ĐĂNG NHẬP";
+    document.getElementById("msg").innerText = "";
 }
 
-users.push({email,pass});
-localStorage.setItem("users",JSON.stringify(users));
-msg.style.color="#00ffcc";
-msg.innerText="Đăng ký thành công!";
-setTimeout(showLogin,1000);
+/* 4. HÀM ĐĂNG KÝ (GỬI DỮ LIỆU VỀ ADMIN) */
+function register() {
+    let email = document.getElementById("regEmail").value.trim();
+    let pass = document.getElementById("regPass").value.trim();
+    let msg = document.getElementById("msg");
+    
+    // Lấy danh sách users từ LocalStorage
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    if(email === "" || pass === "") {
+        msg.style.color = "#ff4b2b";
+        msg.innerText = "⚠️ Vui lòng nhập đầy đủ thông tin!";
+        return;
+    }
+
+    if(users.find(u => u.email === email)) {
+        msg.style.color = "#ff4b2b";
+        msg.innerText = "❌ Email này đã tồn tại trên Server!";
+        return;
+    }
+
+    // Tạo Object người dùng mới để Admin có thể xem
+    let newUser = {
+        email: email,
+        pass: pass,
+        date: new Date().toLocaleString('vi-VN'), // Lưu ngày giờ đăng ký
+        role: "customer"
+    };
+
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users)); // Gửi vào bộ nhớ chung
+
+    msg.style.color = "#00f2ff";
+    msg.innerText = "✅ Đăng ký thành công! Đang chuyển hướng...";
+    
+    setTimeout(showLogin, 1200);
 }
 
-/* Login */
-function login(){
-let email=loginEmail.value.trim();
-let pass=loginPass.value.trim();
-let users=JSON.parse(localStorage.getItem("users"))||[];
-let found=users.find(u=>u.email===email && u.pass===pass);
+/* 5. HÀM ĐĂNG NHẬP */
+function login() {
+    let email = document.getElementById("loginEmail").value.trim();
+    let pass = document.getElementById("loginPass").value.trim();
+    let msg = document.getElementById("msg");
 
-if(found){
-msg.style.color="#00ffcc";
-msg.innerText="Đăng nhập thành công!";
-setTimeout(()=>window.location.href="home.html",1000);
-}else{
-msg.style.color="red";
-msg.innerText="Sai thông tin!";
+    // Lối tắt dành riêng cho Admin Trần Bách
+    if(email === "admin@bach.com" && pass === "123456") {
+        msg.style.color = "#00f2ff";
+        msg.innerText = "👑 Chào sếp Bách! Đang vào Command Center...";
+        setTimeout(() => window.location.href = "admin.html", 1000);
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    let found = users.find(u => u.email === email && u.pass === pass);
+
+    if(found) {
+        msg.style.color = "#00f2ff";
+        msg.innerText = "🚀 Đăng nhập thành công!";
+        setTimeout(() => window.location.href = "home.html", 1000);
+    } else {
+        msg.style.color = "#ff4b2b";
+        msg.innerText = "❌ Sai Email hoặc Mật khẩu!";
+    }
 }
-}
+
 </script>
 
 </body>

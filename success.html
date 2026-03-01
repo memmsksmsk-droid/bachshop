@@ -64,37 +64,71 @@
 </div>
 
 <script>
+    
+        /* 1. LẤY DỮ LIỆU ĐƠN HÀNG & TÀI KHOẢN ĐANG ĐĂNG NHẬP */
     const order = JSON.parse(localStorage.getItem("currentOrder"));
+    const currentUser = sessionStorage.getItem("currentUser") || "Khách vãng lai"; // Lấy email từ trang Login
+    const billContent = document.getElementById("billContent");
 
     if(order) {
-        document.getElementById("billContent").innerHTML = `
-            <div class="line"><span>Mã đơn hàng:</span> <b>${order.id}</b></div>
+        // Hiển thị thông tin hóa đơn cho khách xem
+        const orderTime = new Date().toLocaleString('vi-VN');
+        
+        billContent.innerHTML = `
+            <div class="line"><span>Mã đơn hàng:</span> <b>#${order.id || '2026-X'}</b></div>
+            <div class="line"><span>Tài khoản đặt:</span> <b style="color:#00c6ff">${currentUser}</b></div>
             <div class="line"><span>Người chuyển:</span> <b>${order.payerName}</b></div>
-            <div class="line"><span>Ngân hàng:</span> <b>${order.bankName}</b></div>
-            <div class="line"><span>Số tiền:</span> <b style="color:#00c6ff">${order.total.toLocaleString()}đ</b></div>
-            <div class="line"><span>Trạng thái:</span> <b style="color:#4bb543">Đang kiểm tra</b></div>
+            <div class="line"><span>Số tiền:</span> <b style="color:#00c6ff">${(order.total || 0).toLocaleString()}đ</b></div>
+            <div class="line"><span>Thời gian:</span> <b>${orderTime}</b></div>
+            <div class="line"><span>Trạng thái:</span> <b style="color:#4bb543">Chờ Admin duyệt</b></div>
         `;
+
+        // 2. GỬI DỮ LIỆU VỀ HỆ THỐNG ADMIN COMMANDER
+        let allOrders = JSON.parse(localStorage.getItem("orders")) || [];
+        
+        // Kiểm tra tránh trùng lặp đơn hàng khi khách F5 trang
+        const isExisted = allOrders.find(o => o.id === order.id);
+        
+        if(!isExisted) {
+            const adminOrder = {
+                id: order.id || Date.now(),
+                product: order.productName || "Sản phẩm Tết 2026",
+                client: order.payerName,
+                userEmail: currentUser, // Gắn tài khoản người đặt vào đơn hàng
+                total: order.total,
+                status: "Chờ duyệt", // Mặc định là chờ duyệt để Admin chỉnh sửa
+                date: orderTime
+            };
+            
+            allOrders.push(adminOrder);
+            localStorage.setItem("orders", JSON.stringify(allOrders));
+            console.log("🚀 Đã gửi đơn hàng và thông tin tài khoản về Admin!");
+        }
     } else {
-        document.getElementById("billContent").innerHTML = "Không tìm thấy dữ liệu hóa đơn.";
+        billContent.innerHTML = "<p style='color:#ff4b2b'>⚠️ Không tìm thấy dữ liệu hóa đơn mới nhất.</p>";
     }
 
-    /* Hiệu ứng mưa (Giống trang chủ) */
+    /* 3. HIỆU ỨNG MƯA (GIỮ NGUYÊN) */
     const canvas = document.getElementById("rain");
     const ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    let drops=[];
-    for(let i=0;i<200;i++){ drops.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,l:15,s:5}); }
-    function rain(){
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctx.strokeStyle="rgba(255,255,255,0.25)";
-        drops.forEach(d=>{
-            ctx.beginPath(); ctx.moveTo(d.x,d.y); ctx.lineTo(d.x-2,d.y+d.l); ctx.stroke();
-            d.y+=d.s; if(d.y>canvas.height)d.y=0;
+    let drops = [];
+    for(let i = 0; i < 200; i++) { 
+        drops.push({x: Math.random() * canvas.width, y: Math.random() * canvas.height, l: 15, s: 5}); 
+    }
+    function rain() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = "rgba(255,255,255,0.25)";
+        drops.forEach(d => {
+            ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - 2, d.y + d.l); ctx.stroke();
+            d.y += d.s; if(d.y > canvas.height) d.y = 0;
         });
         requestAnimationFrame(rain);
     }
     rain();
+
+    
 </script>
 
 </body>

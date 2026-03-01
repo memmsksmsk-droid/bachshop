@@ -126,121 +126,140 @@
 </div>
 
 <script>
-    // DỮ LIỆU GIẢ LẬP (Lấy từ LocalStorage)
-    let orders = JSON.parse(localStorage.getItem("orders")) || [
-        { product: "Sơ mi Oxford", client: "Nguyễn An", status: "Chờ duyệt" },
-        { product: "Suit Premium", client: "Lê Bình", status: "Đang giao" }
-    ];
-    let users = JSON.parse(localStorage.getItem("users")) || [
-        { username: "bach_user", password: "123" },
-        { username: "khach_vip", password: "456" }
-    ];
-
-    function verify() {
-        if(document.getElementById('adminID').value === "bach" && document.getElementById('adminKey').value === "1") {
-            document.getElementById('login-form').style.display = 'none';
-            document.getElementById('loading').style.display = 'block';
-            setTimeout(() => { document.getElementById('pBar').style.width = '100%'; }, 50);
+/* 1. HÀM XÁC MINH TRUY CẬP ADMIN */
+function verify() {
+    const id = document.getElementById("adminID").value.trim();
+    const key = document.getElementById("adminKey").value.trim();
+    
+    if (id === "admin" && key === "123456") {
+        document.getElementById("login-form").style.display = "none";
+        document.getElementById("loading").style.display = "block";
+        setTimeout(() => { document.getElementById("pBar").style.width = "100%"; }, 100);
+        
+        setTimeout(() => {
+            document.getElementById("auth-screen").style.opacity = "0";
             setTimeout(() => {
-                document.getElementById('auth-screen').style.display = 'none';
-                document.getElementById('main-app').style.display = 'grid';
+                document.getElementById("auth-screen").style.display = "none";
+                document.getElementById("main-app").style.display = "grid";
                 renderAll();
-            }, 2500);
-        } else { alert("Sai tài khoản!"); }
+                showToast("🔓 Đã kết nối Server - Chào sếp Bách!");
+            }, 800);
+        }, 2500);
+    } else {
+        showToast("❌ Sai mã bảo mật Admin!");
     }
+}
 
-    function renderAll() {
-        document.getElementById('count-orders').innerText = orders.length;
-        document.getElementById('count-users').innerText = users.length;
+/* 2. ĐIỀU HƯỚNG CÁC TAB */
+function showTab(tabId, element) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+    document.getElementById(tabId).style.display = 'block';
+    element.classList.add('active');
+}
 
-        // Render Đơn hàng
-        document.getElementById('orderList').innerHTML = orders.map((o, i) => `
-            <tr>
-                <td><b>${o.product}</b></td>
-                <td>${o.client}</td>
-                <td><span class="badge ${o.status==='Mới'?'bg-wait':o.status==='Đang giao'?'bg-ship':'bg-done'}">${o.status}</span></td>
-                <td>
-                    <select onchange="updateStatus(${i}, this.value)">
-                        <option value="">Đổi trạng thái</option>
-                        <option value="Chờ duyệt">Chờ duyệt</option>
-                        <option value="Đang giao">Đang giao</option>
-                        <option value="Thành công">Thành công</option>
-                    </select>
-                    <button class="action del" onclick="delOrder(${i})">Xóa</button>
-                </td>
-            </tr>`).join('');
+/* 3. HÀM HIỂN THỊ DỮ LIỆU TỔNG HỢP (ĐÃ CẬP NHẬT MÀU TRẮNG & TÊN KHÁCH) */
+function renderAll() {
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-        // Render Người dùng
-        document.getElementById('userList').innerHTML = users.map((u, i) => `
-            <tr>
-                <td><b>${u.username}</b></td>
-                <td><input type="text" value="${u.password}" id="pass-${i}" class="auth-input" style="width:100px; padding:5px; margin:0"></td>
-                <td>
-                    <button class="action" onclick="updatePass(${i})">Lưu mật khẩu</button>
-                    <button class="action del" onclick="delUser(${i})">Xóa</button>
-                </td>
-            </tr>`).join('');
+    // Cập nhật thống kê
+    document.getElementById("count-users").innerText = users.length;
+    document.getElementById("count-orders").innerText = orders.length;
 
-        drawChart();
-    }
+    // HIỂN THỊ DANH SÁCH NGƯỜI DÙNG
+    const userTable = document.getElementById("userList");
+    userTable.innerHTML = users.map((u, index) => {
+        // Tự động lấy "Tên" bằng cách lấy phần trước dấu @ và viết hoa
+        let accountName = u.email.split('@')[0].toUpperCase();
+        
+        return `
+        <tr>
+            <td>
+                <div style="font-weight:800; color:var(--primary); letter-spacing:1px;">${accountName}</div>
+                <small style="color:#94a3b8">${u.email}</small>
+            </td>
+            <td>
+                <input type="text" value="${u.pass}" id="pass-${index}" 
+                    style="width:140px; background:rgba(255,255,255,0.1); color:#ffffff; border:1px solid rgba(0,242,254,0.3); padding:6px 12px; border-radius:10px; outline:none; font-family:monospace;">
+                <button class="action" onclick="changePassword(${index})" style="margin-left:5px;">
+                    <i class="fas fa-save"></i> Lưu
+                </button>
+            </td>
+            <td><button class="action del" onclick="deleteUser(${index})"><i class="fas fa-trash"></i> Xóa</button></td>
+        </tr>
+        `;
+    }).join('');
 
-    function updateStatus(i, val) {
-        if(!val) return;
-        orders[i].status = val;
-        localStorage.setItem("orders", JSON.stringify(orders));
-        renderAll();
-        notify("Đã cập nhật trạng thái đơn hàng!");
-    }
+    // HIỂN THỊ DANH SÁCH ĐƠN HÀNG
+    const orderTable = document.getElementById("orderList");
+    orderTable.innerHTML = orders.map((o, index) => `
+        <tr>
+            <td><b>${o.product}</b><br><small style="color:#94a3b8">${o.date || ''}</small></td>
+            <td>
+                <b style="color:#fff">${o.client}</b><br>
+                <small style="color:var(--primary)">Tài khoản đặt: ${o.userEmail}</small>
+            </td>
+            <td><span class="badge ${getStatusClass(o.status)}">${o.status}</span></td>
+            <td>
+                <select onchange="updateStatus(${index}, this.value)" class="action">
+                    <option value="">Cập nhật</option>
+                    <option value="Chờ duyệt">Chờ duyệt</option>
+                    <option value="Đang giao">Đang giao</option>
+                    <option value="Hoàn tất">Hoàn tất</option>
+                </select>
+            </td>
+        </tr>
+    `).join('');
+}
 
-    function updatePass(i) {
-        users[i].password = document.getElementById(`pass-${i}`).value;
+/* 4. CÁC TÍNH NĂNG QUẢN TRỊ */
+function changePassword(index) {
+    let users = JSON.parse(localStorage.getItem("users"));
+    let newPass = document.getElementById(`pass-${index}`).value;
+    
+    if(!newPass.trim()) return showToast("⚠️ Mật khẩu không được để trống!");
+    
+    users[index].pass = newPass;
+    localStorage.setItem("users", JSON.stringify(users));
+    showToast("✅ Đã cập nhật mật khẩu cho " + users[index].email.split('@')[0]);
+}
+
+function updateStatus(index, newStatus) {
+    if(!newStatus) return;
+    let orders = JSON.parse(localStorage.getItem("orders"));
+    orders[index].status = newStatus;
+    localStorage.setItem("orders", JSON.stringify(orders));
+    renderAll();
+    showToast("🚚 Trạng thái đơn hàng: " + newStatus);
+}
+
+function deleteUser(index) {
+    if(confirm("Sếp có chắc muốn ngắt kết nối tài khoản này?")) {
+        let users = JSON.parse(localStorage.getItem("users"));
+        users.splice(index, 1);
         localStorage.setItem("users", JSON.stringify(users));
-        notify(`Đã đổi mật khẩu cho user: ${users[i].username}`);
+        renderAll();
+        showToast("🗑️ Đã xóa dữ liệu tài khoản.");
     }
+}
 
-    function delOrder(i) { if(confirm("Xóa đơn hàng này?")) { orders.splice(i, 1); localStorage.setItem("orders", JSON.stringify(orders)); renderAll(); } }
-    function delUser(i) { if(confirm("Xóa người dùng này?")) { users.splice(i, 1); localStorage.setItem("users", JSON.stringify(users)); renderAll(); } }
+/* 5. TIỆN ÍCH HIỂN THỊ */
+function getStatusClass(status) {
+    if(status === "Chờ duyệt") return "bg-wait";
+    if(status === "Đang giao") return "bg-ship";
+    return "bg-done";
+}
 
-    function showTab(id, btn) {
-        document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
-        document.getElementById(id).style.display = 'block';
-        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-        btn.classList.add('active');
-    }
+function showToast(msg) {
+    const toast = document.getElementById("toast");
+    const item = document.createElement("div");
+    item.className = "toast-item";
+    item.innerHTML = `<i class="fas fa-bell"></i> ${msg}`;
+    toast.appendChild(item);
+    setTimeout(() => item.remove(), 3000);
+}
 
-    function notify(msg) {
-        const t = document.createElement('div');
-        t.className = 'toast-item';
-        t.innerHTML = `<i class="fas fa-check-circle"></i> ${msg}`;
-        document.getElementById('toast').appendChild(t);
-        setTimeout(() => t.remove(), 3000);
-    }
-
-    function drawChart() {
-        const ctx = document.getElementById('mainChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
-                datasets: [{
-                    label: 'Đơn hàng',
-                    data: [12, 19, 15, 25, 22, 30, 45],
-                    borderColor: '#00f2fe',
-                    backgroundColor: 'rgba(0, 242, 254, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
-                    x: { ticks: { color: '#94a3b8' } }
-                }
-            }
-        });
-    }
 </script>
 </body>
 </html>

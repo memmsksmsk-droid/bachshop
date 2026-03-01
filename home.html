@@ -521,6 +521,101 @@ p.style.display="none";
 
 <footer class="footer">
     <div class="footer-container">
+<!-- NÚT ADMIN QUANTUM RGB - PHIÊN BẢN ĐẦU TƯ -->
+<div class="admin-quantum-wrapper">
+    <a href="admin.html" class="quantum-btn">
+        <span class="quantum-border"></span>
+        <div class="quantum-content">
+            <i class="bi bi-terminal-fill"></i>
+            <span>ADMIN</span>
+        </div>
+    </a>
+</div>
+
+<style>
+/* Container tinh gọn */
+.admin-quantum-wrapper {
+    padding: 30px 0;
+    display: flex;
+    justify-content: center;
+    background: transparent;
+}
+
+/* Nút bấm Quantum */
+.quantum-btn {
+    position: relative;
+    width: 160px; /* Độ rộng bé, gọn gàng */
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: 50px; /* Bo tròn cực mạnh */
+    overflow: hidden; /* Cắt phần gradient thừa bên ngoài */
+    transition: 0.4s;
+    background: #000;
+}
+
+/* Hiệu ứng viền cầu vồng chạy xung quanh */
+.quantum-border {
+    position: absolute;
+    width: 200%; /* Rộng hơn nút để quay */
+    height: 500%;
+    background: conic-gradient(
+        #ff0000, #ff7300, #fffb00, #48ff00, 
+        #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000
+    );
+    animation: rotateRGB 3s linear infinite;
+    z-index: 1;
+}
+
+/* Lớp phủ bên trong để tạo khoảng trống cho viền */
+.quantum-content {
+    position: relative;
+    z-index: 2;
+    width: calc(100% - 4px); /* Tạo viền 2px */
+    height: calc(100% - 4px);
+    background: rgba(10, 10, 10, 0.95); /* Nền đen sâu */
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    transition: 0.3s;
+}
+
+/* Icon & Chữ */
+.quantum-content i {
+    font-size: 14px;
+    background: linear-gradient(45deg, #00f2ff, #00ff88);
+    -webkit-text-fill-color: transparent;
+}
+
+/* Hiệu ứng khi Hover */
+.quantum-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+}
+
+.quantum-btn:hover .quantum-content {
+    background: rgba(255, 255, 255, 0.05); /* Hiện nền nhẹ khi hover */
+    color: #fff;
+}
+
+.quantum-btn:hover .quantum-border {
+    animation-duration: 1s; /* Chạy nhanh hơn khi di chuột vào */
+}
+
+/* Keyframes xoay vòng cầu vồng */
+@keyframes rotateRGB {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+</style>
 
         <div class="footer-box">
             <h3>📍 Địa chỉ cửa hàng</h3>
@@ -553,6 +648,7 @@ p.style.display="none";
 </footer>
 
 <script>
+    
 const canvas = document.getElementById("rainCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -622,6 +718,9 @@ toggleBtn.addEventListener("click",()=>{
         localStorage.setItem("theme","dark");
     }
 });
+
 </script>
+
+
 </body>
 </html>
