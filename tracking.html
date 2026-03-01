@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Theo dõi đơn hàng - Trần Bách Store</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:linear-gradient(135deg,#1e3c72,#2a5298);
+    color:white;
+    text-align:center;
+    padding-top:80px;
+}
+
+.container{
+    width:420px;
+    margin:auto;
+    padding:30px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(15px);
+    box-shadow:0 0 25px #00f5ff;
+}
+
+input{
+    width:85%;
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    outline:none;
+    font-size:15px;
+}
+
+button{
+    margin-top:15px;
+    padding:10px 25px;
+    border:none;
+    border-radius:25px;
+    background:linear-gradient(45deg,#00f5ff,#ff00c8);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+.result{
+    margin-top:20px;
+    font-size:18px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>📦 Theo dõi đơn hàng</h2>
+
+    <input type="text" id="productName" placeholder="Nhập tên sản phẩm">
+    <br>
+    <button onclick="checkOrder()">Kiểm tra</button>
+
+    <div class="result" id="result">
+        Trạng thái sẽ hiển thị ở đây
+    </div>
+</div>
+
+<script>
+function checkOrder(){
+
+    let name = document.getElementById("productName").value.trim();
+
+    if(name === ""){
+        alert("Vui lòng nhập tên sản phẩm");
+        return;
+    }
+
+    let data = JSON.parse(localStorage.getItem("orders")) || {};
+
+    if(data[name]){
+        document.getElementById("result").innerHTML =
+        "✅ Trạng thái: <b>" + data[name] + "</b>";
+    }else{
+        document.getElementById("result").innerHTML =
+        "❌ Không tìm thấy sản phẩm này";
+    }
+}
+</script>
+
+</body>
+</html>

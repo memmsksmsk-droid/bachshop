@@ -1,0 +1,248 @@
+/* ===== NAVBAR CAO CẤP ===== */
+.navbar{
+    position:relative;
+    background:rgba(0,0,0,0.7) !important;
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(255,255,255,0.1);
+    overflow:hidden;
+}
+
+/* Hiệu ứng ánh sáng chạy */
+.navbar::after{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:50%;
+    height:100%;
+    background:linear-gradient(120deg,transparent,rgba(255,255,255,0.15),transparent);
+    animation:shine 6s infinite;
+}
+@keyframes shine{
+    0%{left:-100%;}
+    100%{left:150%;}
+}
+
+/* ===== LOGO ===== */
+.brand-logo{
+    transition:0.4s;
+}
+.navbar-brand:hover .brand-logo{
+    transform:rotate(10deg) scale(1.1);
+}
+
+/* ===== NÚT CHUNG ===== */
+.navbar .btn{
+    border-radius:40px;
+    padding:7px 18px;
+    font-weight:500;
+    font-size:14px;
+    transition:all 0.3s ease;
+    border:none;
+}
+
+/* Trang chủ + Tư vấn */
+.btn-outline-light{
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.2);
+}
+.btn-outline-light:hover{
+    background:linear-gradient(45deg,#ff512f,#dd2476);
+    transform:translateY(-3px);
+    box-shadow:0 5px 15px rgba(255,80,47,0.4);
+}
+
+/* Theo dõi đơn hàng nổi bật */
+.track-btn{
+    padding:8px 22px;
+    border-radius:40px;
+    background:linear-gradient(45deg,#00c6ff,#0072ff);
+    color:white;
+    font-weight:600;
+    text-decoration:none;
+    transition:0.3s;
+    position:relative;
+    overflow:hidden;
+}
+.track-btn:hover{
+    transform:translateY(-3px) scale(1.05);
+    box-shadow:0 0 20px rgba(0,114,255,0.6);
+}
+
+/* Glow pulse */
+.track-btn::after{
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    background:radial-gradient(circle,rgba(255,255,255,0.4),transparent);
+    opacity:0;
+    transition:0.4s;
+}
+.track-btn:hover::after{
+    opacity:0.3;
+}
+
+/* ===== SEARCH BOX ===== */
+#searchInput{
+    width:190px;
+    border-radius:40px;
+    padding:8px 18px 8px 40px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.2);
+    color:white;
+    transition:0.4s;
+    position:relative;
+}
+#searchInput:focus{
+    width:240px;
+    background:rgba(255,255,255,0.15);
+    box-shadow:0 0 10px rgba(255,255,255,0.2);
+    outline:none;
+}
+
+/* Icon search */
+.search-wrapper{
+    position:relative;
+}
+.search-wrapper i{
+    position:absolute;
+    left:15px;
+    top:50%;
+    transform:translateY(-50%);
+    color:rgba(255,255,255,0.6);
+}
+
+/* ===== RAIN CANVAS ===== */
+#rainCanvas{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+}
+/* ===== THEME TOGGLE BUTTON ===== */
+.theme-toggle{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    background:rgba(255,255,255,0.1);
+    color:white;
+    font-size:18px;
+    transition:0.3s;
+}
+
+.theme-toggle:hover{
+    transform:rotate(20deg) scale(1.1);
+    background:linear-gradient(45deg,#f7971e,#ffd200);
+}
+
+/* ===== LIGHT MODE ===== */
+body.light-mode{
+    background:#f5f5f5 !important;
+    color:#111 !important;
+    transition:0.4s;
+}
+
+body.light-mode .navbar{
+    background:rgba(255,255,255,0.9) !important;
+    backdrop-filter:blur(10px);
+}
+
+body.light-mode .navbar a,
+body.light-mode .navbar .navbar-brand{
+    color:#111 !important;
+}
+
+body.light-mode #searchInput{
+    background:rgba(0,0,0,0.05);
+    color:#111;
+    border:1px solid rgba(0,0,0,0.2);
+}
+
+body.light-mode .btn-outline-light{
+    background:rgba(0,0,0,0.05);
+    color:#111;
+}
+/* ===== PREMIUM TOP BANNER 2026 ===== */
+.top-banner{
+position:absolute;
+top:0;
+width:100%;
+height:55px;
+background:rgba(10,15,25,0.45);
+backdrop-filter:blur(15px);
+overflow:hidden;
+display:flex;
+align-items:center;
+border-bottom:1px solid rgba(255,255,255,0.08);
+z-index:30;
+box-shadow:0 0 25px rgba(0,242,255,0.2);
+}
+
+/* Viền ánh sáng chạy */
+.top-banner::before{
+content:"";
+position:absolute;
+top:0;
+left:-100%;
+width:50%;
+height:100%;
+background:linear-gradient(120deg,transparent,rgba(0,255,255,0.4),transparent);
+animation:scan 4s linear infinite;
+}
+
+@keyframes scan{
+0%{left:-100%;}
+100%{left:150%;}
+}
+
+.banner-text{
+white-space:nowrap;
+position:absolute;
+font-weight:bold;
+font-size:19px;
+letter-spacing:1px;
+animation:scrollText 18s linear infinite, rgbShift 6s linear infinite;
+}
+
+/* Chạy chữ */
+@keyframes scrollText{
+0%{left:100%;}
+100%{left:-100%;}
+}
+
+/* RGB đổi màu */
+@keyframes rgbShift{
+0%{color:#00f2ff; text-shadow:0 0 8px #00f2ff;}
+25%{color:#4facfe; text-shadow:0 0 12px #4facfe;}
+50%{color:#9d4edd; text-shadow:0 0 15px #9d4edd;}
+75%{color:#00ff88; text-shadow:0 0 12px #00ff88;}
+100%{color:#00f2ff; text-shadow:0 0 8px #00f2ff;}
+}
+.support-btn{
+position:fixed;
+left:25px;
+top:75px;
+padding:10px 20px;
+border-radius:50px;
+background:linear-gradient(45deg,#ff00cc,#3333ff);
+color:white;
+text-decoration:none;
+font-weight:bold;
+box-shadow:0 0 20px rgba(255,0,200,0.6);
+z-index:50;
+transition:0.3s;
+}
+
+.support-btn:hover{
+transform:scale(1.1);
+box-shadow:0 0 35px #ff00cc;
+}

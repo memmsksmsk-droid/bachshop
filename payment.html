@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thanh toán QR - Gia Dien</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+min-height:100vh;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+overflow:hidden;
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:-1;
+}
+
+.container{
+width:500px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(15px);
+padding:30px;
+border-radius:20px;
+box-shadow:0 20px 40px rgba(0,0,0,0.6);
+}
+
+h2{
+text-align:center;
+margin-bottom:15px;
+}
+
+.amount{
+text-align:center;
+font-size:22px;
+font-weight:600;
+margin:10px 0;
+color:#00c6ff;
+}
+
+.note{
+text-align:center;
+font-size:14px;
+margin-bottom:15px;
+opacity:0.9;
+}
+
+.qr{
+text-align:center;
+margin:15px 0;
+}
+
+.qr img{
+width:240px;
+border-radius:15px;
+box-shadow:0 0 25px rgba(0,0,0,0.6);
+}
+
+input{
+width:100%;
+padding:12px;
+margin:8px 0;
+border:none;
+border-radius:12px;
+background:rgba(255,255,255,0.15);
+color:white;
+outline:none;
+}
+
+input[type="file"]{
+background:none;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:12px;
+border:none;
+border-radius:25px;
+background:linear-gradient(45deg,#00c6ff,#0072ff);
+color:white;
+font-weight:600;
+cursor:pointer;
+}
+
+button:hover{
+box-shadow:0 0 20px #00c6ff;
+}
+</style>
+</head>
+<body>
+
+<canvas id="rain"></canvas>
+
+<div class="container">
+
+<h2>🌧 Thanh toán đơn hàng</h2>
+
+<div class="amount" id="amount"></div>
+
+<div class="note" id="note"></div>
+
+<div class="qr">
+<img src="z7575484411348_8b3c79d9f038f6601e0b315624371c1c.jpg" alt="QR Thanh Toán">
+</div>
+
+<input type="text" id="payerName" placeholder="Tên người chuyển khoản">
+<input type="text" id="bankName" placeholder="Ngân hàng chuyển">
+<input type="file" id="proof">
+
+<button onclick="confirmPayment()">Tôi đã thanh toán</button>
+
+</div>
+
+<script>
+const order = JSON.parse(localStorage.getItem("currentOrder"));
+
+if(order){
+document.getElementById("amount").innerText = 
+"Số tiền: " + order.total.toLocaleString() + "đ";
+
+document.getElementById("note").innerText =
+"Nội dung CK: " + order.id;
+}else{
+document.getElementById("amount").innerText="Không tìm thấy đơn hàng";
+}
+
+function confirmPayment(){
+const payer = document.getElementById("payerName").value.trim();
+const bank = document.getElementById("bankName").value.trim();
+
+if(!payer || !bank){
+alert("Vui lòng điền đầy đủ thông tin!");
+return;
+}
+
+order.status = "Đã xác nhận thanh toán";
+localStorage.setItem("currentOrder", JSON.stringify(order));
+
+alert("Cảm ơn bạn đã thanh toán! Shop sẽ kiểm tra và xác nhận.");
+}
+
+/* Rain */
+const canvas = document.getElementById("rain");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let drops=[];
+for(let i=0;i<200;i++){
+drops.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,l:15,s:5});
+}
+
+function rain(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.strokeStyle="rgba(255,255,255,0.25)";
+drops.forEach(d=>{
+ctx.beginPath();
+ctx.moveTo(d.x,d.y);
+ctx.lineTo(d.x-2,d.y+d.l);
+ctx.stroke();
+d.y+=d.s;
+if(d.y>canvas.height)d.y=0;
+});
+requestAnimationFrame(rain);
+}
+rain();
+</script>
+
+</body>
+</html>

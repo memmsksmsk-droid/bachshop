@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Cinematic Login 2026</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="\.css">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+height:100vh;
+overflow:hidden;
+background:linear-gradient(to top,#0f2027,#203a43,#2c5364);
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+position:relative;
+padding-top:60px;
+}
+
+/* ===== TOP BANNER ===== */
+.top-banner{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:55px;
+background:rgba(10,15,25,0.6);
+backdrop-filter:blur(15px);
+display:flex;
+align-items:center;
+overflow:hidden;
+z-index:40;
+border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.banner-text{
+position:absolute;
+white-space:nowrap;
+font-weight:bold;
+font-size:18px;
+animation:scrollText 18s linear infinite;
+color:#00f2ff;
+text-shadow:0 0 12px #00f2ff;
+}
+
+@keyframes scrollText{
+0%{left:100%;}
+100%{left:-100%;}
+}
+
+/* ===== FOREST ===== */
+.forest{
+position:absolute;
+bottom:0;
+width:100%;
+height:250px;
+background:
+radial-gradient(circle at 10% 100%,#05080c 40%,transparent 41%),
+radial-gradient(circle at 30% 100%,#05080c 40%,transparent 41%),
+radial-gradient(circle at 50% 100%,#05080c 40%,transparent 41%),
+radial-gradient(circle at 70% 100%,#05080c 40%,transparent 41%),
+radial-gradient(circle at 90% 100%,#05080c 40%,transparent 41%);
+background-size:300px 250px;
+animation:moveForest 60s linear infinite;
+}
+
+@keyframes moveForest{
+0%{background-position:0 0;}
+100%{background-position:2000px 0;}
+}
+
+/* ===== RAIN ===== */
+.rain{
+position:absolute;
+width:100%;
+height:100%;
+pointer-events:none;
+}
+
+.drop{
+position:absolute;
+bottom:100%;
+width:2px;
+height:20px;
+background:rgba(255,255,255,0.4);
+animation:fall linear infinite;
+}
+
+@keyframes fall{
+to{transform:translateY(120vh);}
+}
+
+/* ===== LOGIN LAYOUT ===== */
+.container-auth{
+position:relative;
+z-index:5;
+display:flex;
+gap:40px;
+}
+
+.auth-box{
+width:380px;
+padding:40px;
+border-radius:25px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(18px);
+box-shadow:0 0 40px rgba(0,0,0,0.6);
+}
+
+.auth-box h3{
+text-align:center;
+margin-bottom:25px;
+}
+
+.form-control{
+background:rgba(255,255,255,0.15);
+border:none;
+color:white;
+}
+
+.form-control:focus{
+background:rgba(255,255,255,0.25);
+box-shadow:0 0 12px #00f2ff;
+color:white;
+}
+
+.btn-main{
+width:100%;
+margin-top:15px;
+border-radius:50px;
+background:linear-gradient(45deg,#00f2ff,#4facfe);
+border:none;
+font-weight:bold;
+}
+
+.switch{
+margin-top:15px;
+text-align:center;
+cursor:pointer;
+color:#00f2ff;
+}
+
+.hidden{display:none;}
+
+.admin-panel{
+width:280px;
+padding:30px;
+border-radius:25px;
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(10px);
+box-shadow:0 0 30px rgba(0,0,0,0.6);
+}
+
+/* ===== PREMIUM MUSIC BUTTON ===== */
+.music-btn{
+position:fixed;
+top:75px;
+right:25px;
+width:60px;
+height:60px;
+border-radius:50%;
+border:none;
+cursor:pointer;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(10px);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+color:#00f2ff;
+box-shadow:0 0 20px rgba(0,242,255,0.4);
+z-index:50;
+transition:0.3s;
+}
+
+.music-btn:hover{
+transform:scale(1.1);
+box-shadow:0 0 30px #00f2ff;
+}
+
+/* sóng nhạc */
+.music-btn.playing{
+animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+0%{box-shadow:0 0 10px #00f2ff;}
+50%{box-shadow:0 0 30px #00f2ff;}
+100%{box-shadow:0 0 10px #00f2ff;}
+}
+
+/* FOOTER */
+.footer{
+position:absolute;
+bottom:10px;
+width:100%;
+text-align:center;
+font-size:14px;
+opacity:0.7;
+}
+
+#msg{
+margin-top:10px;
+text-align:center;
+font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<div class="top-banner">
+<div class="banner-text">
+👑 Chào mừng bạn đã đến với trang web của Admin Trần Bách – Hệ Thống 2026 👑
+</div>
+</div>
+
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</button>
+
+<div class="forest"></div>
+<div class="rain" id="rain"></div>
+
+<div class="container-auth">
+
+<div class="auth-box">
+<h3 id="title">ĐĂNG NHẬP</h3>
+
+<div id="loginForm">
+<input type="email" id="loginEmail" class="form-control mb-3" placeholder="Email">
+<input type="password" id="loginPass" class="form-control mb-2" placeholder="Mật khẩu">
+<button class="btn btn-main" onclick="login()">Đăng Nhập</button>
+<div class="switch" onclick="showRegister()">Chưa có tài khoản? Đăng ký</div>
+</div>
+
+<div id="registerForm" class="hidden">
+<input type="email" id="regEmail" class="form-control mb-3" placeholder="Email">
+<input type="password" id="regPass" class="form-control mb-2" placeholder="Mật khẩu">
+<button class="btn btn-main" onclick="register()">Đăng Ký</button>
+<div class="switch" onclick="showLogin()">Đã có tài khoản? Đăng nhập</div>
+</div>
+
+<div id="msg"></div>
+</div>
+
+<div class="admin-panel">
+<h4>Thông tin Admin</h4>
+<p><strong>Tên:</strong> Trần Bách</p>
+<p><strong>Phiên bản:</strong> Bách 2.0</p>
+<p>Hệ Thống web Bán Hàng top 1</p>
+</div>
+
+</div>
+
+<div class="footer">
+© 2026 Trần Bách. All Rights Reserved.
+</div>
+
+<audio id="bgMusic" loop>
+<source src="tiktok_audio.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* Rain */
+for(let i=0;i<120;i++){
+let d=document.createElement("div");
+d.className="drop";
+d.style.left=Math.random()*100+"%";
+d.style.animationDuration=(0.6+Math.random())+"s";
+document.getElementById("rain").appendChild(d);
+}
+
+/* Music */
+let music=document.getElementById("bgMusic");
+let btn=document.getElementById("musicBtn");
+let playing=false;
+
+function toggleMusic(){
+if(!playing){
+music.play();
+btn.innerHTML="🔊";
+btn.classList.add("playing");
+playing=true;
+}else{
+music.pause();
+btn.innerHTML="🎵";
+btn.classList.remove("playing");
+playing=false;
+}
+}
+
+/* Switch */
+function showRegister(){
+loginForm.classList.add("hidden");
+registerForm.classList.remove("hidden");
+title.innerText="ĐĂNG KÝ";
+msg.innerText="";
+}
+function showLogin(){
+registerForm.classList.add("hidden");
+loginForm.classList.remove("hidden");
+title.innerText="ĐĂNG NHẬP";
+msg.innerText="";
+}
+
+/* Register */
+function register(){
+let email=regEmail.value.trim();
+let pass=regPass.value.trim();
+let users=JSON.parse(localStorage.getItem("users"))||[];
+
+if(email===""||pass===""){
+msg.style.color="red";
+msg.innerText="Vui lòng nhập đầy đủ!";
+return;
+}
+
+if(users.find(u=>u.email===email)){
+msg.style.color="red";
+msg.innerText="Email đã tồn tại!";
+return;
+}
+
+users.push({email,pass});
+localStorage.setItem("users",JSON.stringify(users));
+msg.style.color="#00ffcc";
+msg.innerText="Đăng ký thành công!";
+setTimeout(showLogin,1000);
+}
+
+/* Login */
+function login(){
+let email=loginEmail.value.trim();
+let pass=loginPass.value.trim();
+let users=JSON.parse(localStorage.getItem("users"))||[];
+let found=users.find(u=>u.email===email && u.pass===pass);
+
+if(found){
+msg.style.color="#00ffcc";
+msg.innerText="Đăng nhập thành công!";
+setTimeout(()=>window.location.href="home.html",1000);
+}else{
+msg.style.color="red";
+msg.innerText="Sai thông tin!";
+}
+}
+</script>
+
+</body>
+</html>
