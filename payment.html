@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thanh toán QR - Gia Dien</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<title>Thanh toán QR - TRAN BACH</title>
+<link href="https://fonts.googleapis.com" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
@@ -91,10 +91,12 @@ background:linear-gradient(45deg,#00c6ff,#0072ff);
 color:white;
 font-weight:600;
 cursor:pointer;
+transition: 0.3s;
 }
 
 button:hover{
 box-shadow:0 0 20px #00c6ff;
+transform: scale(1.02);
 }
 </style>
 </head>
@@ -106,16 +108,17 @@ box-shadow:0 0 20px #00c6ff;
 
 <h2>🌧 Thanh toán đơn hàng</h2>
 
-<div class="amount" id="amount"></div>
+<div class="amount" id="amount">Đang tải số tiền...</div>
 
-<div class="note" id="note"></div>
+<div class="note" id="note">Đang tải mã đơn...</div>
 
 <div class="qr">
+<!-- Thay đổi link ảnh QR của bạn ở đây -->
 <img src="z7575484411348_8b3c79d9f038f6601e0b315624371c1c.jpg" alt="QR Thanh Toán">
 </div>
 
-<input type="text" id="payerName" placeholder="Tên người chuyển khoản">
-<input type="text" id="bankName" placeholder="Ngân hàng chuyển">
+<input type="text" id="payerName" placeholder="Tên người chuyển khoản (Vd: Nguyễn Văn A)">
+<input type="text" id="bankName" placeholder="Ngân hàng chuyển (Vd: MB Bank, Vietcombank)">
 <input type="file" id="proof">
 
 <button onclick="confirmPayment()">Tôi đã thanh toán</button>
@@ -123,56 +126,75 @@ box-shadow:0 0 20px #00c6ff;
 </div>
 
 <script>
+// Lấy thông tin đơn hàng từ LocalStorage
 const order = JSON.parse(localStorage.getItem("currentOrder"));
 
 if(order){
-document.getElementById("amount").innerText = 
-"Số tiền: " + order.total.toLocaleString() + "đ";
+    document.getElementById("amount").innerText = 
+    "Số tiền: " + order.total.toLocaleString() + "đ";
 
-document.getElementById("note").innerText =
-"Nội dung CK: " + order.id;
+    document.getElementById("note").innerText =
+    "Nội dung CK: " + order.id;
 }else{
-document.getElementById("amount").innerText="Không tìm thấy đơn hàng";
+    document.getElementById("amount").innerText="Không tìm thấy đơn hàng";
 }
 
+// HÀM XỬ LÝ KHI BẤM NÚT (BƯỚC 1)
 function confirmPayment(){
-const payer = document.getElementById("payerName").value.trim();
-const bank = document.getElementById("bankName").value.trim();
+    const payer = document.getElementById("payerName").value.trim();
+    const bank = document.getElementById("bankName").value.trim();
 
-if(!payer || !bank){
-alert("Vui lòng điền đầy đủ thông tin!");
-return;
+    // 1. Kiểm tra xem khách đã nhập đủ thông tin chưa
+    if(!payer || !bank){
+        alert("Vui lòng điền đầy đủ Tên và Ngân hàng để shop kiểm tra đơn nhé!");
+        return;
+    }
+
+    // 2. Cập nhật dữ liệu đơn hàng mới vào biến order
+    const updatedOrder = {
+        ...order, // Giữ lại id và total cũ
+        payerName: payer,
+        bankName: bank,
+        status: "Đã gửi thông báo thanh toán",
+        paymentTime: new Date().toLocaleString()
+    };
+
+    // 3. Lưu lại vào localStorage để trang success.html có thể đọc được
+    localStorage.setItem("currentOrder", JSON.stringify(updatedOrder));
+
+    // 4. Thông báo và Chuyển hướng sang trang success.html
+    alert("Thông tin đã được ghi nhận. Đang tạo hóa đơn...");
+    window.location.href = "success.html"; 
 }
 
-order.status = "Đã xác nhận thanh toán";
-localStorage.setItem("currentOrder", JSON.stringify(order));
-
-alert("Cảm ơn bạn đã thanh toán! Shop sẽ kiểm tra và xác nhận.");
-}
-
-/* Rain */
+/* Hiệu ứng Rain */
 const canvas = document.getElementById("rain");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
 let drops=[];
 for(let i=0;i<200;i++){
-drops.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,l:15,s:5});
+    drops.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,l:15,s:5});
 }
 
 function rain(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-ctx.strokeStyle="rgba(255,255,255,0.25)";
-drops.forEach(d=>{
-ctx.beginPath();
-ctx.moveTo(d.x,d.y);
-ctx.lineTo(d.x-2,d.y+d.l);
-ctx.stroke();
-d.y+=d.s;
-if(d.y>canvas.height)d.y=0;
-});
-requestAnimationFrame(rain);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.25)";
+    drops.forEach(d=>{
+        ctx.beginPath();
+        ctx.moveTo(d.x,d.y);
+        ctx.lineTo(d.x-2,d.y+d.l);
+        ctx.stroke();
+        d.y+=d.s;
+        if(d.y>canvas.height)d.y=0;
+    });
+    requestAnimationFrame(rain);
 }
 rain();
 </script>
