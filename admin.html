@@ -158,7 +158,7 @@ function showTab(tabId, element) {
     element.classList.add('active');
 }
 
-/* 3. HÀM HIỂN THỊ DỮ LIỆU TỔNG HỢP (ĐÃ CẬP NHẬT MÀU TRẮNG & TÊN KHÁCH) */
+/* 3. HÀM HIỂN THỊ TỔNG HỢP (ĐÃ THÊM XÓA ĐƠN & XEM TẤT CẢ) */
 function renderAll() {
     const users = JSON.parse(localStorage.getItem("users")) || [];
     const orders = JSON.parse(localStorage.getItem("orders")) || [];
@@ -170,9 +170,7 @@ function renderAll() {
     // HIỂN THỊ DANH SÁCH NGƯỜI DÙNG
     const userTable = document.getElementById("userList");
     userTable.innerHTML = users.map((u, index) => {
-        // Tự động lấy "Tên" bằng cách lấy phần trước dấu @ và viết hoa
         let accountName = u.email.split('@')[0].toUpperCase();
-        
         return `
         <tr>
             <td>
@@ -187,39 +185,56 @@ function renderAll() {
                 </button>
             </td>
             <td><button class="action del" onclick="deleteUser(${index})"><i class="fas fa-trash"></i> Xóa</button></td>
-        </tr>
-        `;
+        </tr>`;
     }).join('');
 
-    // HIỂN THỊ DANH SÁCH ĐƠN HÀNG
+    // HIỂN THỊ DANH SÁCH ĐƠN HÀNG (CÓ NÚT XÓA ĐƠN)
     const orderTable = document.getElementById("orderList");
-    orderTable.innerHTML = orders.map((o, index) => `
+    if (orders.length === 0) {
+        orderTable.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:30px; opacity:0.5;">Chưa có đơn hàng nào.</td></tr>`;
+    } else {
+        orderTable.innerHTML = orders.map((o, index) => `
         <tr>
             <td><b>${o.product}</b><br><small style="color:#94a3b8">${o.date || ''}</small></td>
             <td>
                 <b style="color:#fff">${o.client}</b><br>
-                <small style="color:var(--primary)">Tài khoản đặt: ${o.userEmail}</small>
+                <small style="color:var(--primary)">TK đặt: ${o.userEmail}</small>
             </td>
             <td><span class="badge ${getStatusClass(o.status)}">${o.status}</span></td>
             <td>
-                <select onchange="updateStatus(${index}, this.value)" class="action">
-                    <option value="">Cập nhật</option>
-                    <option value="Chờ duyệt">Chờ duyệt</option>
-                    <option value="Đang giao">Đang giao</option>
-                    <option value="Hoàn tất">Hoàn tất</option>
-                </select>
+                <div style="display:flex; gap:5px;">
+                    <select onchange="updateStatus(${index}, this.value)" class="action">
+                        <option value="">Cập nhật</option>
+                        <option value="Chờ duyệt">Chờ duyệt</option>
+                        <option value="Đang giao">Đang giao</option>
+                        <option value="Hoàn tất">Hoàn tất</option>
+                    </select>
+                    <button class="action del" onclick="deleteOrder(${index})" title="Xóa đơn hàng">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
             </td>
-        </tr>
-    `).join('');
+        </tr>`).join('');
+    }
 }
 
 /* 4. CÁC TÍNH NĂNG QUẢN TRỊ */
+
+// --- XÓA ĐƠN HÀNG ---
+function deleteOrder(index) {
+    if(confirm("Sếp chắc chắn muốn xóa vĩnh viễn đơn hàng này?")) {
+        let orders = JSON.parse(localStorage.getItem("orders")) || [];
+        orders.splice(index, 1);
+        localStorage.setItem("orders", JSON.stringify(orders));
+        renderAll();
+        showToast("🗑️ Đã xóa đơn hàng thành công!");
+    }
+}
+
 function changePassword(index) {
     let users = JSON.parse(localStorage.getItem("users"));
     let newPass = document.getElementById(`pass-${index}`).value;
-    
     if(!newPass.trim()) return showToast("⚠️ Mật khẩu không được để trống!");
-    
     users[index].pass = newPass;
     localStorage.setItem("users", JSON.stringify(users));
     showToast("✅ Đã cập nhật mật khẩu cho " + users[index].email.split('@')[0]);
@@ -259,6 +274,7 @@ function showToast(msg) {
     toast.appendChild(item);
     setTimeout(() => item.remove(), 3000);
 }
+
 
 </script>
 </body>
