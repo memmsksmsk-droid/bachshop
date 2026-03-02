@@ -309,4 +309,57 @@ box-shadow:
 0 0 30px #1d9bf0;
 transform:scale(1.1);
 }
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px){
 
+body{
+padding-top:70px;
+overflow:auto;
+}
+
+.container-auth{
+flex-direction:column;
+align-items:center;
+gap:20px;
+padding:20px;
+}
+
+.auth-box{
+width:100%;
+max-width:400px;
+padding:25px;
+}
+
+.admin-panel{
+width:100%;
+max-width:400px;
+padding:20px;
+}
+
+.music-btn{
+width:50px;
+height:50px;
+top:70px;
+right:15px;
+}
+
+.banner-text{
+font-size:14px;
+}
+
+.forest{
+height:150px;
+}
+}
+.logout-btn{
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #ff3b3b;
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+}

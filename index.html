@@ -2,21 +2,15 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cinematic Login 2026</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="\.css">
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
 
 body{
-height:100vh;
-overflow:hidden;
+min-height:100vh;
 background:linear-gradient(to top,#0f2027,#203a43,#2c5364);
 display:flex;
 align-items:center;
@@ -24,13 +18,13 @@ justify-content:center;
 color:white;
 position:relative;
 padding-top:60px;
+overflow-x:hidden;
 }
 
 /* ===== TOP BANNER ===== */
 .top-banner{
 position:fixed;
-top:0;
-left:0;
+top:0;left:0;
 width:100%;
 height:55px;
 background:rgba(10,15,25,0.6);
@@ -57,27 +51,6 @@ text-shadow:0 0 12px #00f2ff;
 100%{left:-100%;}
 }
 
-/* ===== FOREST ===== */
-.forest{
-position:absolute;
-bottom:0;
-width:100%;
-height:250px;
-background:
-radial-gradient(circle at 10% 100%,#05080c 40%,transparent 41%),
-radial-gradient(circle at 30% 100%,#05080c 40%,transparent 41%),
-radial-gradient(circle at 50% 100%,#05080c 40%,transparent 41%),
-radial-gradient(circle at 70% 100%,#05080c 40%,transparent 41%),
-radial-gradient(circle at 90% 100%,#05080c 40%,transparent 41%);
-background-size:300px 250px;
-animation:moveForest 60s linear infinite;
-}
-
-@keyframes moveForest{
-0%{background-position:0 0;}
-100%{background-position:2000px 0;}
-}
-
 /* ===== RAIN ===== */
 .rain{
 position:absolute;
@@ -99,26 +72,24 @@ animation:fall linear infinite;
 to{transform:translateY(120vh);}
 }
 
-/* ===== LOGIN LAYOUT ===== */
+/* ===== AUTH BOX ===== */
 .container-auth{
 position:relative;
 z-index:5;
+width:100%;
 display:flex;
-gap:40px;
+justify-content:center;
+padding:20px;
 }
 
 .auth-box{
-width:380px;
-padding:40px;
+width:100%;
+max-width:400px;
+padding:35px;
 border-radius:25px;
 background:rgba(255,255,255,0.08);
 backdrop-filter:blur(18px);
 box-shadow:0 0 40px rgba(0,0,0,0.6);
-}
-
-.auth-box h3{
-text-align:center;
-margin-bottom:25px;
 }
 
 .form-control{
@@ -151,54 +122,6 @@ color:#00f2ff;
 
 .hidden{display:none;}
 
-.admin-panel{
-width:280px;
-padding:30px;
-border-radius:25px;
-background:rgba(0,0,0,0.35);
-backdrop-filter:blur(10px);
-box-shadow:0 0 30px rgba(0,0,0,0.6);
-}
-
-/* ===== PREMIUM MUSIC BUTTON ===== */
-.music-btn{
-position:fixed;
-top:75px;
-right:25px;
-width:60px;
-height:60px;
-border-radius:50%;
-border:none;
-cursor:pointer;
-background:rgba(0,0,0,0.6);
-backdrop-filter:blur(10px);
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:22px;
-color:#00f2ff;
-box-shadow:0 0 20px rgba(0,242,255,0.4);
-z-index:50;
-transition:0.3s;
-}
-
-.music-btn:hover{
-transform:scale(1.1);
-box-shadow:0 0 30px #00f2ff;
-}
-
-/* sóng nhạc */
-.music-btn.playing{
-animation:pulse 1.5s infinite;
-}
-
-@keyframes pulse{
-0%{box-shadow:0 0 10px #00f2ff;}
-50%{box-shadow:0 0 30px #00f2ff;}
-100%{box-shadow:0 0 10px #00f2ff;}
-}
-
-/* FOOTER */
 .footer{
 position:absolute;
 bottom:10px;
@@ -208,10 +131,12 @@ font-size:14px;
 opacity:0.7;
 }
 
-#msg{
-margin-top:10px;
-text-align:center;
-font-weight:bold;
+#msg{text-align:center;margin-top:10px;font-weight:bold;}
+
+/* MOBILE */
+@media (max-width:768px){
+.banner-text{font-size:14px;}
+.auth-box{padding:25px;}
 }
 </style>
 </head>
@@ -219,19 +144,15 @@ font-weight:bold;
 
 <div class="top-banner">
 <div class="banner-text">
-👑 Chào mừng bạn đã đến với trang web của Admin Trần Bách – Hệ Thống 2026 👑
+👑 Chào mừng bạn đến hệ thống của Admin Trần Bách 2026 👑
 </div>
 </div>
 
-<button class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</button>
-
-<div class="forest"></div>
 <div class="rain" id="rain"></div>
 
 <div class="container-auth">
-
 <div class="auth-box">
-<h3 id="title">ĐĂNG NHẬP</h3>
+<h3 id="title" class="text-center mb-4">ĐĂNG NHẬP</h3>
 
 <div id="loginForm">
 <input type="email" id="loginEmail" class="form-control mb-3" placeholder="Email">
@@ -249,132 +170,113 @@ font-weight:bold;
 
 <div id="msg"></div>
 </div>
-
-<div class="admin-panel">
-<h4>Thông tin Admin</h4>
-<p><strong>Tên:</strong> Trần Bách</p>
-<p><strong>Phiên bản:</strong> Bách 2.0</p>
-<p>Hệ Thống web Bán Hàng top 1</p>
 </div>
 
-</div>
-
-<div class="footer">
-© 2026 Trần Bách. All Rights Reserved.
-</div>
-
-<audio id="bgMusic" loop>
-<source src="tiktok_audio.mp3" type="audio/mpeg">
-</audio>
+<div class="footer">© 2026 Trần Bách</div>
 
 <script>
-/* 1. HIỆU ỨNG MƯA (RAIN EFFECT) */
+
+/* ===== RAIN EFFECT ===== */
 const rainContainer = document.getElementById("rain");
-for(let i = 0; i < 120; i++) {
-    let drop = document.createElement("div");
-    drop.className = "drop";
-    drop.style.left = Math.random() * 100 + "%";
-    drop.style.animationDuration = (0.6 + Math.random()) + "s";
-    rainContainer.appendChild(drop);
+for(let i=0;i<120;i++){
+let drop=document.createElement("div");
+drop.className="drop";
+drop.style.left=Math.random()*100+"%";
+drop.style.animationDuration=(0.6+Math.random())+"s";
+rainContainer.appendChild(drop);
 }
 
-/* 2. ĐIỀU KHIỂN NHẠC (MUSIC CONTROL) */
-let music = document.getElementById("bgMusic");
-let btn = document.getElementById("musicBtn");
-let playing = false;
-
-function toggleMusic() {
-    if(!playing) {
-        music.play();
-        btn.innerHTML = "🔊";
-        btn.classList.add("playing");
-        playing = true;
-    } else {
-        music.pause();
-        btn.innerHTML = "🎵";
-        btn.classList.remove("playing");
-        playing = false;
-    }
+/* ===== AUTO LOGIN ===== */
+let currentUser=JSON.parse(localStorage.getItem("currentUser"));
+if(currentUser){
+if(currentUser.role==="admin"){
+window.location.href="admin.html";
+}else{
+window.location.href="home.html";
+}
 }
 
-/* 3. CHUYỂN ĐỔI FORM (SWITCH FORM) */
-function showRegister() {
-    document.getElementById("loginForm").classList.add("hidden");
-    document.getElementById("registerForm").classList.remove("hidden");
-    document.getElementById("title").innerText = "ĐĂNG KÝ";
-    document.getElementById("msg").innerText = "";
+/* ===== SWITCH FORM ===== */
+function showRegister(){
+loginForm.classList.add("hidden");
+registerForm.classList.remove("hidden");
+title.innerText="ĐĂNG KÝ";
+msg.innerText="";
 }
 
-function showLogin() {
-    document.getElementById("registerForm").classList.add("hidden");
-    document.getElementById("loginForm").classList.remove("hidden");
-    document.getElementById("title").innerText = "ĐĂNG NHẬP";
-    document.getElementById("msg").innerText = "";
+function showLogin(){
+registerForm.classList.add("hidden");
+loginForm.classList.remove("hidden");
+title.innerText="ĐĂNG NHẬP";
+msg.innerText="";
 }
 
-/* 4. HÀM ĐĂNG KÝ (GỬI DỮ LIỆU VỀ ADMIN) */
-function register() {
-    let email = document.getElementById("regEmail").value.trim();
-    let pass = document.getElementById("regPass").value.trim();
-    let msg = document.getElementById("msg");
-    
-    // Lấy danh sách users từ LocalStorage
-    let users = JSON.parse(localStorage.getItem("users")) || [];
+/* ===== ENCODE PASSWORD ===== */
+function encodePass(p){return btoa(p);}
 
-    if(email === "" || pass === "") {
-        msg.style.color = "#ff4b2b";
-        msg.innerText = "⚠️ Vui lòng nhập đầy đủ thông tin!";
-        return;
-    }
+/* ===== REGISTER ===== */
+function register(){
+let email=regEmail.value.trim();
+let pass=regPass.value.trim();
+let users=JSON.parse(localStorage.getItem("users"))||[];
 
-    if(users.find(u => u.email === email)) {
-        msg.style.color = "#ff4b2b";
-        msg.innerText = "❌ Email này đã tồn tại trên Server!";
-        return;
-    }
-
-    // Tạo Object người dùng mới để Admin có thể xem
-    let newUser = {
-        email: email,
-        pass: pass,
-        date: new Date().toLocaleString('vi-VN'), // Lưu ngày giờ đăng ký
-        role: "customer"
-    };
-
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users)); // Gửi vào bộ nhớ chung
-
-    msg.style.color = "#00f2ff";
-    msg.innerText = "✅ Đăng ký thành công! Đang chuyển hướng...";
-    
-    setTimeout(showLogin, 1200);
+if(!email||!pass){
+msg.style.color="red";
+msg.innerText="Nhập đầy đủ thông tin!";
+return;
 }
 
-/* 5. HÀM ĐĂNG NHẬP */
-function login() {
-    let email = document.getElementById("loginEmail").value.trim();
-    let pass = document.getElementById("loginPass").value.trim();
-    let msg = document.getElementById("msg");
+if(users.find(u=>u.email===email)){
+msg.style.color="red";
+msg.innerText="Email đã tồn tại!";
+return;
+}
 
-    // Lối tắt dành riêng cho Admin Trần Bách
-    if(email === "admin@bach.com" && pass === "123456") {
-        msg.style.color = "#00f2ff";
-        msg.innerText = "👑 Chào sếp Bách! Đang vào Command Center...";
-        setTimeout(() => window.location.href = "admin.html", 1000);
-        return;
-    }
+let newUser={
+email:email,
+pass:encodePass(pass),
+role:"customer",
+date:new Date().toLocaleString('vi-VN')
+};
 
-    let users = JSON.parse(localStorage.getItem("users")) || [];
-    let found = users.find(u => u.email === email && u.pass === pass);
+users.push(newUser);
+localStorage.setItem("users",JSON.stringify(users));
 
-    if(found) {
-        msg.style.color = "#00f2ff";
-        msg.innerText = "🚀 Đăng nhập thành công!";
-        setTimeout(() => window.location.href = "home.html", 1000);
-    } else {
-        msg.style.color = "#ff4b2b";
-        msg.innerText = "❌ Sai Email hoặc Mật khẩu!";
-    }
+msg.style.color="#00f2ff";
+msg.innerText="Đăng ký thành công!";
+setTimeout(showLogin,1000);
+}
+
+/* ===== LOGIN ===== */
+function login(){
+let email=loginEmail.value.trim();
+let pass=encodePass(loginPass.value.trim());
+let users=JSON.parse(localStorage.getItem("users"))||[];
+
+if(email==="admin@bach.com"&&loginPass.value==="123456"){
+localStorage.setItem("currentUser",JSON.stringify({email:email,role:"admin"}));
+window.location.href="admin.html";
+return;
+}
+
+let found=users.find(u=>u.email===email&&u.pass===pass);
+
+if(found){
+localStorage.setItem("currentUser",JSON.stringify(found));
+localStorage.setItem("rememberEmail",email);
+window.location.href="home.html";
+}else{
+msg.style.color="red";
+msg.innerText="Sai tài khoản hoặc mật khẩu!";
+}
+}
+
+/* ===== REMEMBER EMAIL ===== */
+window.onload=function(){
+let remembered=localStorage.getItem("rememberEmail");
+if(remembered){
+loginEmail.value=remembered;
+}
 }
 
 </script>
