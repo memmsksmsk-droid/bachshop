@@ -227,22 +227,86 @@ animation:scrollText 18s linear infinite, rgbShift 6s linear infinite;
 75%{color:#00ff88; text-shadow:0 0 12px #00ff88;}
 100%{color:#00f2ff; text-shadow:0 0 8px #00f2ff;}
 }
-.support-btn{
-position:fixed;
-left:25px;
-top:75px;
-padding:10px 20px;
-border-radius:50px;
-background:linear-gradient(45deg,#ff00cc,#3333ff);
-color:white;
+.btn-danh-gia {
+    position: fixed;
+    bottom: 20px; /* Cách đáy màn hình 20px */
+    left: 20px;   /* Đổi sang bên trái để không trùng nút Zalo/Gọi điện */
+    background-color: #28a745;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    transition: all 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+}
+
+.btn-danh-gia:hover {
+    transform: translateY(-3px); /* Nhảy nhẹ lên khi di chuột vào */
+    background-color: #218838;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Nút Đánh giá VIP ở góc trái màn hình */
+/* ===== MINI VIP BLACK BUTTON ===== */
+
+.btn-danh-gia{
+display:inline-flex;
+align-items:center;
+gap:8px;
+padding:8px 18px;
+border-radius:40px;
+font-size:14px;
+font-weight:700;
 text-decoration:none;
-font-weight:bold;
-box-shadow:0 0 20px rgba(255,0,200,0.6);
-z-index:50;
+background:#111;
+color:white;
+letter-spacing:0.5px;
+transition:0.3s;
+box-shadow:0 4px 15px rgba(0,0,0,0.4);
+}
+
+/* hover nhẹ sang */
+.btn-danh-gia:hover{
+background:#000;
+transform:translateY(-2px);
+box-shadow:0 6px 25px rgba(0,0,0,0.6);
+}
+
+/* chữ đẹp hơn */
+.btn-danh-gia span{
+font-weight:700;
+font-family:'Segoe UI',sans-serif;
+}
+
+/* tích xanh nền đen */
+.tick-xanh{
+width:22px;
+height:22px;
+border-radius:50%;
+background:black;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:11px;
+color:#1d9bf0;
+box-shadow:
+0 0 8px rgba(29,155,240,0.7),
+0 0 18px rgba(29,155,240,0.5);
 transition:0.3s;
 }
 
-.support-btn:hover{
+/* hover làm tích sáng hơn */
+.btn-danh-gia:hover .tick-xanh{
+box-shadow:
+0 0 15px #1d9bf0,
+0 0 30px #1d9bf0;
 transform:scale(1.1);
-box-shadow:0 0 35px #ff00cc;
 }
+
