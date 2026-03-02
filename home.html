@@ -124,9 +124,21 @@ footer{
 <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
 <div class="container">
 <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="#">
-    <img src="ảnh avt .png" alt="logo" width="35" height="35" class="brand-logo">
+    <img src="ảnh avt.png" alt="logo" width="35" height="35" class="brand-logo">
     TRAN BACH STORE
 </a>
+<div class="music-container">
+    <button id="music-btn" class="music-btn playing">
+        <span class="music-icon">🎵</span>
+        <span class="music-text">Nhạc chill </span>
+        <div class="wave-bars">
+            <span></span><span></span><span></span>
+        </div>
+    </button>
+    <audio id="bg-music" loop>
+        <source src="nhac trang chủ.mp3" type="audio/mpeg">
+    </audio>
+</div>
 <button class="logout-btn" onclick="logoutUser()">Thoát</button>
 <a href="bach.html" style="
 margin-left:15px;
@@ -784,7 +796,32 @@ function logoutUser(){
     window.location.href = "index.html";
 }
 </script>
+<script>
+        const musicBtn = document.getElementById('music-btn');
+        const audio = document.getElementById('bg-music');
 
+        // Hàm xử lý bật/tắt
+        musicBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                musicBtn.classList.add('playing');
+                musicBtn.classList.remove('paused');
+            } else {
+                audio.pause();
+                musicBtn.classList.add('paused');
+                musicBtn.classList.remove('playing');
+            }
+        });
+
+        // Tự động phát khi người dùng tương tác lần đầu với trang web
+        document.addEventListener('click', () => {
+            if (audio.paused && !musicBtn.classList.contains('paused')) {
+                audio.play();
+            }
+        }, { once: true });
+    </script>
+</body>
+</html>
 
 </body>
 </html>

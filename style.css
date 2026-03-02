@@ -455,3 +455,68 @@ height:150px;
     flex:1 1 300px;
     max-width:350px;
 }
+/* Container nút nhạc nằm bên trái Logo */
+.music-container {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%); /* Căn giữa chính xác theo chiều dọc */
+    z-index: 100;
+}
+
+.music-btn {
+    background: linear-gradient(45deg, #ff0000, #ffcc00);
+    border: 1.5px solid #fff;
+    border-radius: 20px;
+    padding: 6px 14px;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    transition: all 0.3s ease;
+}
+
+/* Hiệu ứng nháy khi đang phát nhạc */
+.music-btn.playing {
+    animation: pulse-red 1.5s infinite; /* Nháy nhịp đập */
+}
+
+@keyframes pulse-red {
+    0% { transform: translateY(0) scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+    50% { transform: translateY(0) scale(1.05); box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+    100% { transform: translateY(0) scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+}
+
+/* Sóng nhạc mini bên trong nút */
+.wave-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 12px;
+}
+
+.wave-bars span {
+    width: 3px;
+    background: white;
+    animation: music-wave 0.5s infinite alternate;
+}
+
+@keyframes music-wave {
+    from { height: 2px; }
+    to { height: 12px; }
+}
+
+/* Khi tắt nhạc thì ngừng mọi hiệu ứng */
+.music-btn.paused {
+    background: #555;
+    animation: none;
+    box-shadow: none;
+}
+.music-btn.paused .wave-bars span {
+    animation-play-state: paused;
+    height: 3px;
+}
