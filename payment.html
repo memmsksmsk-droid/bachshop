@@ -199,6 +199,17 @@ function rain(){
 }
 rain();
 </script>
+<script>
 
+const product = JSON.parse(localStorage.getItem("currentProduct"));
+
+if(product){
+
+document.getElementById("amount").innerText = product.price;
+document.getElementById("note").innerText = "Thanh toán: " + product.name;
+
+}
+
+</script>
 </body>
 </html>

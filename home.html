@@ -820,6 +820,29 @@ function logoutUser(){
             }
         }, { once: true });
     </script>
+    <script>
+document.querySelectorAll('.product').forEach(product => {
+
+  const btn = product.querySelector('a[href="checkout.html"]');
+
+  if(btn){
+    btn.addEventListener("click", function(){
+
+      const name = product.querySelector("h6")?.innerText || "";
+      const price = product.querySelector("p")?.innerText || "";
+
+      const data = {
+        name: name,
+        price: price
+      };
+
+      localStorage.setItem("currentProduct", JSON.stringify(data));
+
+    });
+  }
+
+});
+</script>
 </body>
 </html>
 
