@@ -13,9 +13,9 @@
 :root{
 --primary:#00f2fe;
 --secondary:#4facfe;
---bg:#020617;
---glass:rgba(255,255,255,0.03);
---border:rgba(255,255,255,0.08);
+--bg:linear-gradient(135deg,#0f172a,#1e293b,#020617);
+--glass:rgba(255,255,255,0.06);
+--border:rgba(255,255,255,0.15);
 }
 
 body,html{
@@ -146,10 +146,44 @@ width:45px;height:45px;
 border-radius:15px;
 cursor:pointer;
 }
+/* ===== HOME BUTTON ULTRA ===== */
+.home-btn{
+position:fixed;
+top:25px;
+left:25px;
+display:flex;
+align-items:center;
+gap:10px;
+padding:12px 20px;
+border-radius:40px;
+background:linear-gradient(45deg,#00f2fe,#4facfe,#9333ea);
+color:#fff;
+font-weight:700;
+text-decoration:none;
+z-index:999;
+box-shadow:0 0 25px rgba(0,242,254,0.7);
+transition:0.4s;
+backdrop-filter:blur(10px);
+}
+
+.home-btn:hover{
+transform:scale(1.12);
+box-shadow:
+0 0 30px #00f2fe,
+0 0 50px #9333ea;
+}
+
+.home-btn i{
+font-size:18px;
+}
 </style>
 </head>
 
 <body>
+    <a href="home.html" class="home-btn">
+<i class="fa-solid fa-house"></i>
+<span>Trang chủ</span>
+</a>
 
 <canvas id="canvas-bg"></canvas>
 
@@ -279,18 +313,27 @@ box.scrollTop=box.scrollHeight;
 }
 
 function handleSend(){
+
 const input=document.getElementById('userInput');
 const text=input.value.trim();
+
 if(!text) return;
 
 addMessage('user',text);
 input.value="";
 
-setTimeout(()=>{
-addMessage('bot',getReply(text));
-},600);
-}
+addMessage('bot',"Đang nhập...");
 
+setTimeout(()=>{
+
+const box=document.getElementById('chatBox');
+box.lastChild.remove();
+
+addMessage('bot',getReply(text));
+
+},800);
+
+}
 // ================= TRÍ TUỆ BOT =================
 
 function extractInfo(text){
@@ -364,9 +407,70 @@ return arr[i-1]||size;
 }
 
 function getReply(text){
+    
+    // hỏi đổi hàng
+if(clean.includes("doi") || clean.includes("size khong vua")){
+return "Nếu size không vừa anh/chị có thể đổi trong 3 ngày 👍 Shop hỗ trợ đổi size miễn phí.";
+}
+
+// hỏi giao hàng
+if(clean.includes("ship") || clean.includes("giao hang")){
+return "Shop giao toàn quốc 🚚 Thời gian 2-4 ngày tùy khu vực.";
+}
+
+// hỏi chất liệu
+if(clean.includes("vai") || clean.includes("chat lieu")){
+return "Áo dùng vải cotton cao cấp 👕 thoáng mát, co giãn nhẹ và mặc rất thoải mái.";
+}
+
+// hỏi màu
+if(clean.includes("mau")){
+return "Hiện shop có nhiều màu khác nhau 🎨 Anh/chị muốn xem màu nào để em gửi ảnh nhé.";
+}
 
 extractInfo(text);
 const clean=normalize(text);
+// ===== CHÀO HỎI =====
+if(clean.includes("hello") || clean.includes("chao") || clean.includes("hi")){
+return currentBot==="nam"
+?"Chào anh 👋 Quân hỗ trợ anh chọn size và sản phẩm nhé!"
+:"Linh xin chào ✨ Linh giúp mình chọn size và mẫu đẹp nha.";
+}
+
+// ===== HỎI SHOP =====
+if(clean.includes("shop o dau") || clean.includes("dia chi")){
+return "Shop hiện bán online toàn quốc 🌎 Anh/chị đặt hàng sẽ được giao tận nhà.";
+}
+
+// ===== HỎI SẢN PHẨM =====
+if(clean.includes("ao") || clean.includes("quan")){
+return "Shop hiện có nhiều mẫu áo và quần mới 🔥 Anh/chị muốn form rộng hay form ôm?";
+}
+
+// ===== HỎI GIÁ =====
+if(clean.includes("gia") || clean.includes("bao nhieu")){
+return "Giá sản phẩm dao động khoảng 199k - 459k 💰 tùy mẫu. Anh/chị muốn xem mẫu nào để em báo giá chính xác nhé.";
+}
+
+// ===== HỎI SHIP =====
+if(clean.includes("ship") || clean.includes("giao hang")){
+return "Shop giao hàng toàn quốc 🚚 Thời gian từ 2-4 ngày tùy khu vực.";
+}
+
+// ===== HỎI ĐỔI HÀNG =====
+if(clean.includes("doi hang") || clean.includes("doi size")){
+return "Nếu mặc không vừa shop hỗ trợ đổi size trong 3 ngày 👍";
+}
+
+// ===== HỎI CHẤT LIỆU =====
+if(clean.includes("vai") || clean.includes("chat lieu")){
+return "Áo được làm từ cotton cao cấp 👕 mềm, thoáng và co giãn nhẹ.";
+}
+
+// ===== HỎI SIZE =====
+if(clean.includes("size")){
+return "Anh/chị gửi cân nặng và chiều cao nhé 📏 ví dụ: 65kg 1m72";
+}
 
 // hỏi form
 if(clean.includes("form")){
@@ -414,14 +518,16 @@ return `Anh/chị cao ${customerInfo.height}m rồi 👍 Cho em xin thêm cân n
 }
 
 return currentBot==="nam"
-?"Anh nhập ví dụ: 65kg 1m72 hoặc 65kg mặc rộng 👔"
-:"Mình nhập như: 52kg 1m6 hoặc 52kg mặc ôm nha ✨";
+?"Anh thử nhập như: 65kg 1m72 hoặc 65kg mặc rộng 👔\n\nQuân sẽ tính size chuẩn cho anh."
+:"Mình thử nhập: 52kg 1m6 hoặc 52kg mặc ôm nha ✨\n\nLinh sẽ chọn size đẹp nhất cho mình.";
 }
 
 document.getElementById('userInput').addEventListener('keypress',e=>{
 if(e.key==='Enter') handleSend();
 });
+const clean = text.toLowerCase();
 </script>
+
 
 </body>
 </html>

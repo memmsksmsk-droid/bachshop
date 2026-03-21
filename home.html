@@ -10,7 +10,29 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
+/* ĐÈN LỒNG TREO 2 BÊN */
+.lantern-box {
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    pointer-events: none;
+    font-size: 40px;
+    animation: swing 3s ease-in-out infinite alternate;
+    transform-origin: top center;
+}
+.lantern-left { left: 20px; }
+.lantern-right { right: 20px; }
 
+@keyframes swing {
+    0% { transform: rotate(-5deg); }
+    100% { transform: rotate(5deg); }
+}
+
+/* Hiệu ứng viền vàng chạy quanh ảnh sản phẩm */
+.card:hover {
+    outline: 3px solid #FFD700;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.8) !important;
+}
 /* ===== BACKGROUND TẾT ===== */
 body{
     background: linear-gradient(135deg,#8B0000,#B22222,#FFD700);
@@ -119,8 +141,13 @@ footer{
 </style>
 </head>
 <body>
+    <div class="side-decoration side-left" id="sideLeft"></div>
+<div class="side-decoration side-right" id="sideRight"></div>
+    <div class="lantern-box lantern-left">🏮</div>
+<div class="lantern-box lantern-right">🏮</div>
 
 <!-- NAVBAR -->
+ 
 <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
 <div class="container">
 <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="#">
@@ -175,7 +202,6 @@ transition:0.3s;
 </div>
 <canvas id="rainCanvas"></canvas>
 </nav>
-
 <!-- HERO -->
 <section class="hero">
 <div class="hero-content">
@@ -192,11 +218,62 @@ transition:0.3s;
 <button class="btn btn-outline-danger" onclick="filterCategory('nu')">Nữ</button>
 <button class="btn btn-outline-danger" onclick="filterCategory('phukien')">Phụ kiện</button>
 </section>
+<style>
+    .user-profile-widget {
+        display: flex; align-items: center; gap: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        padding: 8px 20px 8px 8px; border-radius: 40px;
+        border: 1px solid rgba(0, 242, 255, 0.3);
+        cursor: pointer; transition: 0.3s ease;
+        box-shadow: 0 0 10px rgba(0, 242, 255, 0.1);
+        text-decoration: none;
+    }
+    .user-profile-widget:hover {
+        box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
+        transform: scale(1.02);
+    }
+    .user-avatar-vip {
+        width: 45px; height: 45px; border-radius: 50%;
+        border: 2px solid #00f2ff; object-fit: cover;
+    }
+    .user-info-box { display: flex; flex-direction: column; justify-content: center; }
+    .user-name-vip { 
+        font-weight: bold; color: #fff; font-size: 15px; 
+        display: flex; align-items: center; gap: 6px;
+    }
+    .fb-blue-tick { color: #1877F2; font-size: 14px; }
+    .user-balance-vip { 
+        color: #00ff88; font-size: 14px; 
+        font-family: 'Orbitron', sans-serif; font-weight: 900;
+    }
+</style>
 
+<a href="deposit.html" class="user-profile-widget" id="account-widget">
+    <img src="ảnh avt.jpg" class="user-avatar-vip" alt="Avatar">
+    <div class="user-info-box">
+        <div class="user-name-vip">
+            <span id="display-name">Tuấn Anh</span> 
+            <i class="fa-solid fa-circle-check fb-blue-tick"></i>
+        </div>
+        <div class="user-balance-vip" id="display-balance">0 VNĐ</div>
+    </div>
+</a>
 <!-- SẢN PHẨM -->
 <section class="py-5" id="products">
 <div class="container">
 <div class="row g-4" id="productList">
+    <div id="noProduct" style="
+display:none;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+color:red;
+padding:40px;
+width:100%;
+">
+❌ Không có sản phẩm
+</div>
 
 <!-- SẢN PHẨM MẪU -->
 <div class="col-md-3 product" data-category="nam" data-name="ao thun nam">
@@ -340,6 +417,41 @@ transition:0.3s;
 </section>
 <!-- JS -->
 <script>
+    function createSideEffects() {
+    const sides = [document.getElementById('sideLeft'), document.getElementById('sideRight')];
+    
+    sides.forEach(side => {
+        // Tạo đồng xu vàng 3D
+        setInterval(() => {
+            const coin = document.createElement('div');
+            coin.className = 'cyber-coin';
+            coin.innerHTML = '福'; // Chữ "Phúc" hoặc "Vip"
+            coin.style.left = Math.random() * 80 + 'px';
+            coin.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            
+            // Đổi màu Neon ngẫu nhiên cho hào quang đồng xu
+            const neonColors = ['#FFD700', '#00f2ff', '#ff0055'];
+            const color = neonColors[Math.floor(Math.random() * neonColors.length)];
+            coin.style.boxShadow = `0 0 20px ${color}`;
+            
+            side.appendChild(coin);
+            setTimeout(() => coin.remove(), 7000);
+        }, 1500);
+
+        // Tạo vạch kẻ Cyber Scan
+        setInterval(() => {
+            const line = document.createElement('div');
+            line.className = 'cyber-line';
+            line.style.left = Math.random() * 100 + 'px';
+            line.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            side.appendChild(line);
+            setTimeout(() => line.remove(), 4000);
+        }, 1000);
+    });
+}
+
+// Chạy hiệu ứng
+createSideEffects();
     // ===== ĐẾM LƯỢT XEM =====
 if(!localStorage.getItem("viewCount")){
     localStorage.setItem("viewCount",0);
@@ -349,13 +461,32 @@ views++;
 localStorage.setItem("viewCount",views);
 
 const searchInput = document.getElementById("searchInput");
+const products = document.querySelectorAll(".product");
 
 searchInput.addEventListener("keyup", function(){
-let value = this.value.toLowerCase();
-document.querySelectorAll(".product").forEach(p=>{
-let name = p.getAttribute("data-name");
-p.style.display = name.includes(value) ? "block" : "none";
+
+let keyword = this.value.toLowerCase();
+let found = false;
+
+products.forEach(product => {
+
+let productName = product.querySelector("h6").innerText.toLowerCase();
+
+if(productName.includes(keyword)){
+    product.style.display = "block";
+    found = true;
+}else{
+    product.style.display = "none";
+}
+
 });
+
+if(!found){
+document.getElementById("noProduct").style.display="block";
+}else{
+document.getElementById("noProduct").style.display="none";
+}
+
 });
 
 function filterCategory(category){
@@ -374,6 +505,60 @@ p.style.display="none";
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <!-- CONTACT ICON RAINBOW PRO -->
 <style>
+    /* ===== SIDE DECORATION - VIP PRO MAX ===== */
+.side-decoration {
+    position: fixed;
+    top: 0;
+    width: 150px; /* Độ rộng vùng hiệu ứng 2 bên */
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+.side-left { left: 0; }
+.side-right { right: 0; }
+
+/* Đồng xu 3D với hào quang Neon */
+.cyber-coin {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FFD700 20%, #B8860B 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 15px #FFD700, 0 0 30px rgba(255, 215, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #8B0000;
+    font-size: 20px;
+    border: 2px solid #FFF200;
+    animation: float3D 6s linear infinite;
+    opacity: 0.8;
+}
+
+/* Hiệu ứng vạch kẻ Cyber chạy dọc */
+.cyber-line {
+    position: absolute;
+    width: 2px;
+    height: 100px;
+    background: linear-gradient(to bottom, transparent, #00f2ff, transparent);
+    animation: cyberScan 4s linear infinite;
+    filter: drop-shadow(0 0 8px #00f2ff);
+}
+
+@keyframes float3D {
+    0% { transform: translateY(110vh) rotateY(0deg) rotateX(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-10vh) rotateY(360deg) rotateX(180deg); opacity: 0; }
+}
+
+@keyframes cyberScan {
+    0% { transform: translateY(-100px); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+}
 .floating-contact{
     position:fixed;
     right:25px;
@@ -450,6 +635,7 @@ p.style.display="none";
     0%{transform:rotate(0deg);}
     100%{transform:rotate(360deg);}
 }
+
 </style>
 
 <div class="floating-contact">
@@ -718,6 +904,44 @@ p.style.display="none";
 </footer>
 
 <script>
+    document.addEventListener('click', (e) => {
+    for (let i = 0; i < 12; i++) {
+        const p = document.createElement('div');
+        p.className = 'firework-particle';
+        const colors = ['#FFD700', '#FF0000', '#FF4500', '#FFFFFF', '#FF69B4'];
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.left = e.clientX + 'px';
+        p.style.top = e.clientY + 'px';
+        
+        // Tạo hướng nổ ngẫu nhiên
+        const tx = (Math.random() - 0.5) * 200 + 'px';
+        const ty = (Math.random() - 0.5) * 200 + 'px';
+        p.style.setProperty('--tx', tx);
+        p.style.setProperty('--ty', ty);
+        
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 800);
+    }
+});
+function createRedEnvelope() {
+    const envelope = document.createElement('div');
+    envelope.innerHTML = '🧧'; // Icon bao lì xì
+    envelope.style.position = 'fixed';
+    envelope.style.top = '-50px';
+    envelope.style.left = Math.random() * 100 + 'vw';
+    envelope.style.fontSize = Math.random() * 20 + 10 + 'px';
+    envelope.style.zIndex = '9998';
+    envelope.style.userSelect = 'none';
+    envelope.style.cursor = 'default';
+    
+    const duration = Math.random() * 3 + 4 + 's';
+    envelope.style.animation = `fall ${duration} linear forwards`;
+    
+    document.body.appendChild(envelope);
+    setTimeout(() => envelope.remove(), 7000);
+}
+// Tạo bao lì xì mỗi 2 giây
+setInterval(createRedEnvelope, 2000);
     
     
 const canvas = document.getElementById("rainCanvas");
@@ -842,9 +1066,10 @@ document.querySelectorAll('.product').forEach(product => {
   }
 
 });
+
 </script>
 </body>
 </html>
 
 </body>
-</html>
+</html><div class="row g-4" id="productList"></div>
