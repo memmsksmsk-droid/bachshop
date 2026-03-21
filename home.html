@@ -218,47 +218,7 @@ transition:0.3s;
 <button class="btn btn-outline-danger" onclick="filterCategory('nu')">Nữ</button>
 <button class="btn btn-outline-danger" onclick="filterCategory('phukien')">Phụ kiện</button>
 </section>
-<style>
-    .user-profile-widget {
-        display: flex; align-items: center; gap: 12px;
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(15px);
-        padding: 8px 20px 8px 8px; border-radius: 40px;
-        border: 1px solid rgba(0, 242, 255, 0.3);
-        cursor: pointer; transition: 0.3s ease;
-        box-shadow: 0 0 10px rgba(0, 242, 255, 0.1);
-        text-decoration: none;
-    }
-    .user-profile-widget:hover {
-        box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
-        transform: scale(1.02);
-    }
-    .user-avatar-vip {
-        width: 45px; height: 45px; border-radius: 50%;
-        border: 2px solid #00f2ff; object-fit: cover;
-    }
-    .user-info-box { display: flex; flex-direction: column; justify-content: center; }
-    .user-name-vip { 
-        font-weight: bold; color: #fff; font-size: 15px; 
-        display: flex; align-items: center; gap: 6px;
-    }
-    .fb-blue-tick { color: #1877F2; font-size: 14px; }
-    .user-balance-vip { 
-        color: #00ff88; font-size: 14px; 
-        font-family: 'Orbitron', sans-serif; font-weight: 900;
-    }
-</style>
 
-<a href="deposit.html" class="user-profile-widget" id="account-widget">
-    <img src="ảnh avt.jpg" class="user-avatar-vip" alt="Avatar">
-    <div class="user-info-box">
-        <div class="user-name-vip">
-            <span id="display-name">Tuấn Anh</span> 
-            <i class="fa-solid fa-circle-check fb-blue-tick"></i>
-        </div>
-        <div class="user-balance-vip" id="display-balance">0 VNĐ</div>
-    </div>
-</a>
 <!-- SẢN PHẨM -->
 <section class="py-5" id="products">
 <div class="container">
@@ -287,6 +247,7 @@ width:100%;
 </div>
 </div>
 </div>
+
 
 <div class="col-md-3 product" data-category="nu" data-name="dam nu">
 <div class="card shadow-sm">
